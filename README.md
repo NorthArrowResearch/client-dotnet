@@ -14,6 +14,10 @@ To develop applications that use the OpenID Connect Resource Owner flow, you wil
 
 Finally, depending on what you're trying to do with the API, you may need an account on the Keystone Identity Manager to test with. If you don't have one of those yet, you can get one by visiting our [Account Request](https://keystone.sitkatech.com/Account/Register) page.
 
+## Environment Variables
+
+For the `GeoOptix.API.Sample` projects the credentials are loaded in using a `.env` file. A template has been provided called `.env_template`. Copy this to `.env` and fill it out. It is in `.gitignore` so values won't be committed to git.
+
 ## Code Example
 
 First we need to get an authentication token, in this case using the Resource Owner flow:

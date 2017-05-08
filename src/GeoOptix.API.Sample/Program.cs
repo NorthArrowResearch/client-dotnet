@@ -16,24 +16,28 @@
 
 using System;
 using GeoOptix.API.Model;
+using System.Collections.Generic;
 
 namespace GeoOptix.API.Sample
 {
     class Program
     {
-        private static string _apiUrl = "https://qa.champmonitoring.org/api/v1";
-        private static string _authUrl = "https://qa.keystone.sitkatech.com/core/connect/token";
+        private static Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(@"C:\code\client-dotnet\src\GeoOptix.API.SampleFieldUpload\.env");
 
-        private static string _clientID = "<ClientID>";
-        private static string _clientSecret = "<ClientSecret>";
+        private static string API_BASE_URL = variables["API_BASE_URL"];
+        private static string KEYSTONE_URL = variables["KEYSTONE_URL"];
+        private static string KEYSTONE_USER = variables["KEYSTONE_USER"];
+        private static string KEYSTONE_PASS = variables["KEYSTONE_PASS"];
+        private static string KEYSTONE_CLIENT_ID = variables["KEYSTONE_CLIENT_ID"];
+        private static string KEYSTONE_CLIENT_SECRET = variables["KEYSTONE_CLIENT_SECRET"];
 
         static void Main(string[] args)
         {
-            ApiHelper helper = new ApiHelper(_apiUrl, _authUrl, _clientID, _clientSecret, "<UserName>", "<Password>");
+            ApiHelper helper = new ApiHelper(API_BASE_URL, KEYSTONE_URL, KEYSTONE_CLIENT_ID, KEYSTONE_CLIENT_SECRET, KEYSTONE_USER, KEYSTONE_PASS);
 
             var response = helper.Get<ProgramModel>("program", "champ");
 
-            Console.WriteLine(response.Payload.FullName);
+            Console.WriteLine(String.Format("Response: {0}", response.Payload.FullName));
         }
     }
 }
