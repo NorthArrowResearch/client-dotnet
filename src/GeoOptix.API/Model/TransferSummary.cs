@@ -20,7 +20,7 @@ namespace GeoOptix.API.Model
     {
         public int id { get; set; }
         public int visitId { get; set; }
-        public int dataSetTypeId { get; set; }
+        public string datasetName { get; set; }
         public string url { get; set; }
         public string fileUrl { get; set; }
         public string closeUrl { get; set; }

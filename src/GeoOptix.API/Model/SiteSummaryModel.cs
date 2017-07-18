@@ -34,6 +34,9 @@ namespace GeoOptix.API.Model
         [JsonProperty("watershedUrl")]
         public string WatershedUrl { get; set; }
 
+        [JsonProperty("locale")]
+        public string Locale { get; set; }
+
         [JsonProperty("objectType")]
         [JsonConverter(typeof(StringEnumConverter))]
         public ObjectType ObjectType { get { return ObjectType.Site; } }
