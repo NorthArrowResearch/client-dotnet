@@ -31,6 +31,12 @@ namespace GeoOptix.API.Model
         public string Type { get; set; }
 
 
-        [Obsolete] public MetricValueModel() { }
+        public MetricValueModel() { }
+
+        public MetricValueModel(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
     }
 }

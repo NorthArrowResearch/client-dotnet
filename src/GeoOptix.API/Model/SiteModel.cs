@@ -22,9 +22,6 @@ namespace GeoOptix.API.Model
 {
     public class SiteModel : SiteSummaryModel, IHasFolderModels, IHasFileModels, IHasMetricSchemaModels
     {
-        [JsonProperty("locale")]
-        public string Locale { get; set; }
-
         [JsonProperty("latitude")]
         public string Latitude { get; set; }
 

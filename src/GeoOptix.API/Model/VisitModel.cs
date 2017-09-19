@@ -13,7 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
 using System;
 using System.Collections.Generic;
 using GeoOptix.API.Interface;
@@ -26,9 +25,6 @@ namespace GeoOptix.API.Model
         [JsonProperty("organizationName")]
         public string OrganizationName { get; private set; }
 
-        [JsonProperty("siteName")]
-        public string SiteName { get; private set; }
-
         [JsonProperty("hitchName")]
         public string HitchName { get; private set; }
 
@@ -37,6 +33,12 @@ namespace GeoOptix.API.Model
 
         [JsonProperty("protocol")]
         public string Protocol { get; private set; }
+
+        [JsonProperty("protocolID")]
+        public int ProtocolID { get; private set; }
+
+        [JsonProperty("iterationID")]
+        public int IterationID { get; private set; }
 
         [JsonProperty("panel")]
         public string Panel { get; private set; }
@@ -57,7 +59,7 @@ namespace GeoOptix.API.Model
         public IEnumerable<FileSummaryModel> Files { get; set; }
 
         [JsonProperty("fieldFolders")]
-        public IEnumerable<FolderSummaryModel> FieldFolders { get; set; }
+        public IEnumerable<FieldFolderSummaryModel> FieldFolders { get; set; }
 
         [JsonProperty("metricSchemas")]
         public IEnumerable<MetricSchemaModel> MetricSchemas { get; set; }
@@ -73,16 +75,17 @@ namespace GeoOptix.API.Model
 
         [Obsolete] public VisitModel() { }
 
-        public VisitModel(int id, string name, string url, string siteName, string siteUrl, string status, DateTime? lastMeasurementChange, int? sampleYear, DateTime? sampleDate, DateTime? lastUpdated, 
-                          string organizationName, string hitchName, string crewName, string protocol, string panel, int useOrder, string designUrl, string[] tags, 
-                          IEnumerable<MeasurementSummaryModel> measurements, string designSiteUrl, string category)
-            : base(id, name, url, siteUrl, status, lastMeasurementChange, sampleYear, sampleDate, lastUpdated)
+        public VisitModel(int id, string name, string url, string siteName, string siteUrl, string status, DateTime? lastMeasurementChange, int? sampleYear, DateTime? sampleDate, DateTime? lastUpdated,
+            string organizationName, string hitchName, string crewName, int iterationID, string protocol, int protocolID, string panel, int useOrder, string designUrl, string[] tags,
+            IEnumerable<MeasurementSummaryModel> measurements, string designSiteUrl, string category, string scoutingDocumentsUrl)
+            : base(id, name, url, siteName, siteUrl, status, lastMeasurementChange, sampleYear, sampleDate, lastUpdated, scoutingDocumentsUrl)
         {
-            SiteName = siteName;
             OrganizationName = organizationName;
             HitchName = hitchName;
             CrewName = crewName;
+            IterationID = iterationID;
             Protocol = protocol;
+            ProtocolID = protocolID;
             Panel = panel;
             UseOrder = useOrder;
             DesignUrl = designUrl;

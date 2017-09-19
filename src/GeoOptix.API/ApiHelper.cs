@@ -20,7 +20,10 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using System.Text;
+using System.Web;
 using GeoOptix.API.Interface;
 using GeoOptix.API.Model;
 using IdentityModel.Client;
@@ -55,6 +58,19 @@ namespace GeoOptix.API
 
         public const string LAST_MEASUREMENT_CHANGE = "lastmeasurementchange";      // Must be lower case!
 
+        public const string FILTERED_ORGANIZATIONS = "filteredorganizations";    
+        public const string FILTERED_ITERATIONS = "filterediterations";
+
+        public static class FieldFolderType
+        {
+            public static string AuxData = "AuxData";
+            public static string Topo = "Topo";
+            public static string Photos = "Photos";
+            public static string AirTempReadings = "AirTempReadings";
+            public static string StreamTempReadings = "StreamTempReadings";
+            public static string SolarInput = "SolarInput";
+            public static string ScannedPaperFormsAndMaps = "ScannedPaperFormsAndMaps";
+        }
 
         public HttpStatusCode StatusCode
         {
@@ -198,8 +214,8 @@ namespace GeoOptix.API
         }
 
         #endregion
-
-
+        
+        
         public ApiResponse<FolderModel> GetFolder(string folderName)
         {
             var url = MakeFolderUrl(_url, folderName);
@@ -325,9 +341,9 @@ namespace GeoOptix.API
 
             return Post<MetricSchemaModel>(url, attributesToPost);
         }
+        
 
-
-        public ApiResponse<MetricInstanceModel> CreateMetricInstance(IHasUrl item, string schemaName, List<KeyValuePair<string, string>> values)
+        public ApiResponse<MetricInstanceModel> CreateMetricInstance(IHasUrl item, string schemaName, List<MetricValueModel> values)
         {
             var url = MakeMetricCollectionUrl(item.Url, schemaName);
             return Post<MetricInstanceModel>(url, values);
@@ -466,12 +482,22 @@ namespace GeoOptix.API
         }
 
 
-        public ApiResponse<MetricInstanceModel> UpdateMetricInstance(string schemaName, string metricName, ObjectType objectType, List<KeyValuePair<string, string>> attributes)
+        public ApiResponse<MetricInstanceModel> UpdateMetricInstance(string schemaName, string metricName, ObjectType objectType, List<MetricValueModel> values)
         {
             var url = MakeMetricInstanceUrl(_url, objectType, schemaName, metricName);
-            return Put<MetricInstanceModel>(url, attributes);
+            return Put<MetricInstanceModel>(url, values);
         }
 
+        private ApiResponse<T> Put<T>(Uri url, List<MetricValueModel> fields)
+        {
+            using (var client = new HttpClient())
+            {
+                AddAuthToken(client);
+                var body = new StringContent(JsonConvert.SerializeObject(fields), Encoding.UTF8, "application/json");
+                _response = client.PutAsync(url, body).Result;
+            }
+            return ProcessResponse<T>(_response);
+        }
 
         private static Uri MakeTransferCollectionUrl(string baseUrl)
         {
@@ -668,7 +694,7 @@ namespace GeoOptix.API
                 if (queryParamString != "")
                     queryParamString += "&";
 
-                queryParamString += param.Item1 + "=" + param.Item2;
+                queryParamString += param.Item1 + "=" + HttpUtility.UrlEncode(param.Item2);
             }
 
             var uri = new Uri(_url + "/" + objectType + "s?" + queryParamString);
@@ -760,6 +786,16 @@ namespace GeoOptix.API
             {
                 AddAuthToken(client);
                 _response = client.PostAsync(url, new FormUrlEncodedContent(values)).Result;
+            }
+            return ProcessResponse<T>(_response);
+        }
+
+        public ApiResponse<T> Post<T>(Uri url, List<MetricValueModel> values)
+        {
+            using (var client = new HttpClient())
+            {
+                AddAuthToken(client);
+                _response = client.PostAsJsonAsync(url, values).Result;
             }
             return ProcessResponse<T>(_response);
         }
@@ -915,13 +951,22 @@ namespace GeoOptix.API
             using (var client = new HttpClient())
             {
                 AddAuthToken(client);
-                var body = new ObjectContent<TY>(model, new JsonMediaTypeFormatter());
+                var stringbuilder = new StringWriter();
+
+                using (JsonTextWriter jsonTextWriter = new JsonTextWriter(stringbuilder) { CloseOutput = false })
+                {
+                    JsonSerializer jsonSerializer = JsonSerializer.Create();
+                    jsonSerializer.Serialize(jsonTextWriter, model);
+                    jsonTextWriter.Flush();
+                }
+                var body = new StringContent(stringbuilder.ToString());
+                body.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
                 _response = client.PostAsync(url, body).Result;
             }
             return ProcessResponse<T>(_response);
         }
-
-
+        
         private ApiResponse<string> Delete(Uri url)
         {
             using (var client = new HttpClient())
@@ -933,7 +978,7 @@ namespace GeoOptix.API
         }
 
 
-        private static ApiResponse<T> ProcessResponse<T>(HttpResponseMessage response)
+        public static ApiResponse<T> ProcessResponse<T>(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {

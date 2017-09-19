@@ -26,6 +26,8 @@ namespace GeoOptix.API.Model
         Folder = 6,
         FieldFolder = 7,
         MeasurementType = 8,
-        Measurement = 9
+        Measurement = 9,
+        WorkEffort = 10,
+        Protocol = 11
     }
 }

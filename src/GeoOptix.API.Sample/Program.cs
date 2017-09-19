@@ -22,7 +22,7 @@ namespace GeoOptix.API.Sample
 {
     class Program
     {
-        private static Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(@"C:\code\client-dotnet\src\GeoOptix.API.SampleFieldUpload\.env");
+        private static Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(@".env");
 
         private static string API_BASE_URL = variables["API_BASE_URL"];
         private static string KEYSTONE_URL = variables["KEYSTONE_URL"];

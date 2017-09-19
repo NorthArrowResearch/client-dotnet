@@ -49,16 +49,4 @@ namespace GeoOptix.API.Model
         }
     }    
     
-    
-    public class FieldFolderModel : FolderSummaryModel
-    {
-        [JsonProperty("files")]
-        public IEnumerable<FileSummaryModel> FieldFiles { get; set; }
-
-
-        public FieldFolderModel(string name, string url, string parentUrl, ObjectType objectType, IEnumerable<FileSummaryModel> files) : base(name, url, parentUrl, objectType)
-        {
-            FieldFiles = files;
-        }
-    }
 }

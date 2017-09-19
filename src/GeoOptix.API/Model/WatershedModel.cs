@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 
 namespace GeoOptix.API.Model
 {
-    public class WatershedModel : WatershedSummaryModel, IHasFolderModels, IHasFileModels, IHasFieldFolderModels, IHasMetricSchemaModels
+    public class WatershedModel : WatershedSummaryModel, IHasFolderModels, IHasFileModels, IHasMetricSchemaModels
     {
         [JsonProperty("sites")]
         public List<SiteSummaryModel> Sites { get; set; }
@@ -33,9 +33,6 @@ namespace GeoOptix.API.Model
 
         [JsonProperty("metricSchemas")]
         public IEnumerable<MetricSchemaModel> MetricSchemas { get; set; }
-
-        [JsonProperty("fieldFolders")]
-        public IEnumerable<FolderSummaryModel> FieldFolders { get; set; }
 
         [JsonProperty("sampledesigns")]
         public IEnumerable<StudyDesignModel> SampleDesigns { get; set; }

@@ -13,7 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
 using System;
 using GeoOptix.API.Interface;
 using Newtonsoft.Json;
@@ -31,6 +30,9 @@ namespace GeoOptix.API.Model
 
         [JsonProperty("url")]
         public string Url { get; private set; }
+
+        [JsonProperty("siteName")]
+        public string SiteName { get; private set; }
 
         [JsonProperty("siteUrl")]
         public string SiteUrl { get; private set; }
@@ -51,26 +53,30 @@ namespace GeoOptix.API.Model
         public DateTime? LastUpdated { get; private set; }
 
         [JsonProperty("objectType")]
-        [JsonConverter(typeof (StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ObjectType ObjectType
         {
             get { return ObjectType.Visit; }
         }
 
+        [JsonProperty("scoutingDocumentsUrl")]
+        public string ScoutingDocumentsURL { get; set; }
 
         [Obsolete] public VisitSummaryModel() { }
 
-        public VisitSummaryModel(int id, string name, string url, string siteUrl, string status, DateTime? lastMeasurementChange, int? sampleYear, DateTime? sampleDate, DateTime? lastUpdated)
+        public VisitSummaryModel(int id, string name, string url, string siteName, string siteUrl, string status, DateTime? lastMeasurementChange, int? sampleYear, DateTime? sampleDate, DateTime? lastUpdated, string scoutingDocumentsUrl)
         {
             Id = id;
             Name = name;
             Url = url;
             LastMeasurementChange = lastMeasurementChange;
+            SiteName = siteName;
             SiteUrl = siteUrl;
             Status = status;
             SampleYear = sampleYear;
             SampleDate = sampleDate;
             LastUpdated = lastUpdated;
+            ScoutingDocumentsURL = scoutingDocumentsUrl;
         }
     }
 }

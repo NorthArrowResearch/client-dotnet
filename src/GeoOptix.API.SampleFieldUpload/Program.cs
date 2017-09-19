@@ -23,7 +23,7 @@ namespace GeoOptix.API.Sample
 {
     class Program
     {
-        private static Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(@"C:\code\client-dotnet\src\GeoOptix.API.SampleFieldUpload\.env");
+        private static Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(@".env");
         private static int CHUNK_SIZE = (int)Math.Pow(20,6); // 20Mb default
         private static string API_BASE_URL = variables["API_BASE_URL"];
         private static string KEYSTONE_URL = variables["KEYSTONE_URL"];
@@ -36,17 +36,6 @@ namespace GeoOptix.API.Sample
         private static FileInfo fileinfo = new FileInfo(filepath);
         private static int vid = Convert.ToInt16(variables["VISITID"]);
 
-        enum DataSetTypes : int
-        {
-            AuxiliaryDataFiles = 2,
-            TopographicData = 3,
-            SitePhotos = 4,
-            AirTempReadings = 5,
-            StreamTempReadings = 6,
-            SolarInputPhotos = 7,
-            ScannedPaperFormsandMaps = 8
-        }
-
         static void Main(string[] args)
         {
             ApiHelper helper = new ApiHelper(API_BASE_URL, KEYSTONE_URL, KEYSTONE_CLIENT_ID, KEYSTONE_CLIENT_SECRET, KEYSTONE_USER, KEYSTONE_PASS);
@@ -55,7 +44,7 @@ namespace GeoOptix.API.Sample
             var hashcode = ApiHelper.GetFileHashCode(filepath);
             var transferDetail = new TransferDetail
             {
-                dataSetTypeId = (int)DataSetTypes.TopographicData,
+                datasetName = ApiHelper.FieldFolderType.Topo,
                 visitId = vid,
                 manifest = new[] { new TransferManifestFile { hash = hashcode, name = fileinfo.Name }, }
             };

@@ -27,6 +27,6 @@ namespace GeoOptix.API.Interface
 
     public interface IHasFieldFolderModels
     {
-        IEnumerable<FolderSummaryModel> FieldFolders { get; set; }
+        IEnumerable<FieldFolderSummaryModel> FieldFolders { get; set; }
     }
 }
